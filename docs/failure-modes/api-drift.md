@@ -62,6 +62,7 @@ The `-strict` flag rejects unknown fields, which catches the common case where a
 
 Helm templates can produce syntactically valid YAML that uses the wrong API version. The template renders without error, but `kubectl apply` fails on the cluster. Use `Capabilities.APIVersions` to branch on cluster version:
 
+{% raw %}
 ```yaml
 {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
 apiVersion: networking.k8s.io/v1
@@ -69,8 +70,9 @@ apiVersion: networking.k8s.io/v1
 apiVersion: networking.k8s.io/v1beta1
 {{- end }}
 ```
+{% endraw %}
 
-Another common Helm drift error: broken Go template expressions that fail silently. `{{ .Values.replicas }}` evaluates to empty (not an error) if `replicas` is not defined in `values.yaml`. Always use defaults: `{{ .Values.replicas | default 3 }}`.
+Another common Helm drift error: broken Go template expressions that fail silently. {% raw %}`{{ .Values.replicas }}`{% endraw %} evaluates to empty (not an error) if `replicas` is not defined in `values.yaml`. Always use defaults: {% raw %}`{{ .Values.replicas | default 3 }}`{% endraw %}.
 
 ## Kustomize-Specific Drift
 

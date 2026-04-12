@@ -35,11 +35,11 @@ Define reusable named templates for `fullname`, `labels`, `selectorLabels`, and 
 
 ## Template Conventions
 
-- Use `{{- ... -}}` whitespace trimming to prevent blank lines in rendered output.
-- Always pipe string values through `{{ .Values.foo | quote }}`.
-- Use `{{ toYaml .Values.resources | nindent N }}` for nested objects -- never render at column 0.
-- Wrap optional resources in `{{- if .Values.ingress.enabled }}` conditionals.
-- Use `{{ required "message" .Values.key }}` for values that must be supplied by the user.
+- Use {% raw %}`{{- ... -}}`{% endraw %} whitespace trimming to prevent blank lines in rendered output.
+- Always pipe string values through {% raw %}`{{ .Values.foo | quote }}`{% endraw %}.
+- Use {% raw %}`{{ toYaml .Values.resources | nindent N }}`{% endraw %} for nested objects -- never render at column 0.
+- Wrap optional resources in {% raw %}`{{- if .Values.ingress.enabled }}`{% endraw %} conditionals.
+- Use {% raw %}`{{ required "message" .Values.key }}`{% endraw %} for values that must be supplied by the user.
 
 ## Dependency Management
 
@@ -68,4 +68,4 @@ Integrate these steps into your CI pipeline so every chart change is validated b
 
 ## Common LLM Mistakes
 
-The most frequent Helm-specific errors LLMs produce include: missing `{{-` whitespace control, omitting `| nindent N` on `toYaml` calls, forgetting to `quote` string values, hardcoding labels instead of using `include` helpers, not providing defaults for image tags, and not bumping the chart version. See the full checklist in the [reference file](https://github.com/LukasNiessen/kubernetes-skill/blob/main/references/helm-patterns.md#llm-mistake-checklist).
+The most frequent Helm-specific errors LLMs produce include: missing {% raw %}`{{-`{% endraw %} whitespace control, omitting `| nindent N` on `toYaml` calls, forgetting to `quote` string values, hardcoding labels instead of using `include` helpers, not providing defaults for image tags, and not bumping the chart version. See the full checklist in the [reference file](https://github.com/LukasNiessen/kubernetes-skill/blob/main/references/helm-patterns.md#llm-mistake-checklist).
