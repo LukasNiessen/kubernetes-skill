@@ -1,0 +1,16 @@
+{
+  "title": "Kubernetes Skill for Claude Code — KubeShark Documentation",
+  "plugins": ["-sharing", "search-pro", "-lunr", "-search"],
+  "pluginsConfig": {
+    "search-pro": {}
+  },
+  "structure": {
+    "readme": "README.md",
+    "summary": "SUMMARY.md"
+  },
+  "links": {
+    "sidebar": {
+      "GitHub": "https://github.com/LukasNiessen/kubernetes-skill"
+    }
+  }
+}

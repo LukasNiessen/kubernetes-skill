@@ -1,0 +1,13 @@
+{
+  "name": "kubernetes-skill-docs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "honkit build",
+    "serve": "honkit serve"
+  },
+  "devDependencies": {
+    "honkit": "^6.1.6",
+    "gitbook-plugin-search-pro": "^2.0.2"
+  }
+}

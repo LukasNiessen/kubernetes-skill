@@ -1,0 +1,15 @@
+{
+  "name": "kubernetes-skill",
+  "description": "Practical Kubernetes skill focused on security, reliability, and low-hallucination manifest generation. Diagnoses failure modes before generating YAML.",
+  "owner": {
+    "name": "LukasNiessen"
+  },
+  "plugins": [
+    {
+      "name": "kubernetes-skill",
+      "source": "./",
+      "description": "Kubernetes Guardrails — KubeShark",
+      "version": "1.0.0"
+    }
+  ]
+}

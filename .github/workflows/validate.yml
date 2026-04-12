@@ -1,0 +1,125 @@
+name: Validate Skill Structure
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate required files exist
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys, re, yaml
+
+          errors = []
+
+          # --- required top-level files ---
+          for f in ['SKILL.md', 'README.md', 'PHILOSOPHY.md', 'CONTRIBUTING.md',
+                     'CODE_OF_CONDUCT.md', 'CHANGELOG.md', 'LICENSE']:
+              if not Path(f).exists():
+                  errors.append(f'missing required file: {f}')
+
+          # --- required directories ---
+          for d in ['references', '.claude-plugin']:
+              if not Path(d).is_dir():
+                  errors.append(f'missing required directory: {d}')
+
+          # --- marketplace metadata ---
+          mp = Path('.claude-plugin/marketplace.json')
+          if not mp.exists():
+              errors.append('missing .claude-plugin/marketplace.json')
+
+          # --- primary failure-mode references ---
+          for ref in [
+              'references/insecure-workload-defaults.md',
+              'references/resource-starvation.md',
+              'references/network-exposure.md',
+              'references/privilege-sprawl.md',
+              'references/fragile-rollouts.md',
+              'references/api-drift.md',
+          ]:
+              if not Path(ref).exists():
+                  errors.append(f'missing primary reference: {ref}')
+
+          # --- SKILL.md frontmatter ---
+          skill = Path('SKILL.md').read_text(encoding='utf-8')
+          fm_match = re.match(r'^---\n(.+?)\n---', skill, re.DOTALL)
+          if not fm_match:
+              errors.append('SKILL.md missing YAML frontmatter')
+          else:
+              fm = yaml.safe_load(fm_match.group(1))
+              if not fm.get('name'):
+                  errors.append('SKILL.md frontmatter missing "name"')
+              if not fm.get('description'):
+                  errors.append('SKILL.md frontmatter missing "description"')
+
+          if errors:
+              for e in errors:
+                  print(f'ERROR: {e}')
+              sys.exit(1)
+          else:
+              print('All structural checks passed.')
+          PY
+
+      - name: Validate local markdown links
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+
+          errors = []
+          link_re = re.compile(r'\[([^\]]*)\]\(([^)]+)\)')
+
+          for md in Path('.').rglob('*.md'):
+              if '.git' in md.parts or 'node_modules' in md.parts or '_book' in md.parts:
+                  continue
+              text = md.read_text(encoding='utf-8', errors='replace')
+              for match in link_re.finditer(text):
+                  target = match.group(2)
+                  # skip external links, anchors, images, badges
+                  if target.startswith(('http://', 'https://', '#', 'mailto:')):
+                      continue
+                  # strip anchor from local link
+                  target_path = target.split('#')[0]
+                  if not target_path:
+                      continue
+                  resolved = (md.parent / target_path).resolve()
+                  if not resolved.exists():
+                      errors.append(f'{md}:{match.start()}: broken link -> {target}')
+
+          if errors:
+              for e in errors:
+                  print(f'ERROR: {e}')
+              sys.exit(1)
+          else:
+              print('All local links valid.')
+          PY
+
+      - name: Check markdown style
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import sys
+
+          errors = []
+          for md in Path('.').rglob('*.md'):
+              if '.git' in md.parts or 'node_modules' in md.parts or '_book' in md.parts:
+                  continue
+              lines = md.read_text(encoding='utf-8', errors='replace').splitlines()
+              for i, line in enumerate(lines, 1):
+                  if line.rstrip() != line.rstrip('\n') and line.endswith('  '):
+                      errors.append(f'{md}:{i}: trailing double spaces')
+
+          if errors:
+              for e in errors[:20]:
+                  print(f'WARNING: {e}')
+              if len(errors) > 20:
+                  print(f'... and {len(errors) - 20} more')
+          print('Markdown style check complete.')
+          PY
