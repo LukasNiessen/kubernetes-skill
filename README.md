@@ -13,9 +13,13 @@
 
 </div>
 
+The #1 Kubernetes skill for Claude Code and Codex, measured by GitHub stars.
+
 ### Fixes Hallucinations.
 
 LLMs hallucinate a lot when it comes to Kubernetes. They omit security contexts, generate deprecated APIs, use wildcard RBAC, forget resource limits, and produce probes that cause cascading failures. This skill fixes it. It includes best practices for Kubernetes -- good, bad, and neutral examples so the AI avoids common mistakes. Using KubeShark, the AI keeps proven practices in mind, eliminates hallucinations, and defaults to secure, reliable, production-ready manifests.
+
+KubeShark is built as the production-grade Kubernetes skill for Claude Code and Codex: broader than resource-template skills, safer than generic Kubernetes prompts, and tuned for hallucination prevention instead of raw tutorial volume.
 
 ### Very Token-Efficient.
 
@@ -144,6 +148,25 @@ This matters for Kubernetes specifically because:
 2. **Multi-dimensional risk.** Kubernetes operates across security, networking, scheduling, storage, and application lifecycle simultaneously. An LLM must reason about all these dimensions for every resource.
 
 3. **Training data pollution.** Kubernetes has had aggressive API deprecation. The LLM training corpus contains vast amounts of pre-1.22 YAML using removed APIs. Without diagnosis, the LLM confidently generates deprecated configurations.
+
+### Skill Comparison
+
+Here's how KubeShark compares to other public Kubernetes-focused agent skills found during the May 2026 review. This compares Kubernetes skill behavior, not full runtime observability products or broad skill collections.
+
+| Dimension                         | **KubeShark**                                      | **Kubernetes Resource Management** | **Kube Audit Kit**                 | **Kubernetes Operations**          |
+| --------------------------------- | -------------------------------------------------- | ---------------------------------- | ---------------------------------- | ---------------------------------- |
+| **Primary goal**                  | Generate, review, refactor, and harden K8s safely | Explain and template core objects  | Read-only cluster security audits  | Kubectl operations and debugging   |
+| **Failure-mode workflow**         | Yes: six explicit Kubernetes failure modes         | No                                 | Audit workflow only                | Partial operational workflow       |
+| **Manifest generation/review**    | Yes                                                | Yes                                | No, audit-focused                  | Yes                                |
+| **Helm/Kustomize guidance**       | Dedicated references                               | No dedicated coverage              | No                                 | Not primary                        |
+| **Platform-specific guidance**    | EKS, GKE, AKS, OpenShift via CRR                   | No                                 | No                                 | Cloud-aware, less granular         |
+| **GitOps and observability depth** | Argo CD, Flux, Prometheus, OpenTelemetry, Loki     | No                                 | No                                 | No                                 |
+| **Security posture**              | PSS restricted defaults, RBAC, policy engines      | Basic resource guidance            | Strong audit focus                 | General stability/security         |
+| **Cross-resource validation**     | Label, selector, port, policy, and rollout checks  | Basic examples                     | Post-export analysis               | Operational troubleshooting        |
+| **Output contract**               | Assumptions, tradeoffs, validation, rollback       | No                                 | Audit report                       | No structured contract             |
+| **Token strategy**                | Lean workflow plus conditional references          | Single static resource guide       | Scripted audit skill               | Operational guidance               |
+
+KubeShark wins on production manifest work because it diagnoses before generating, keeps platform depth behind CRR, covers Helm/Kustomize and policy engines, and forces validation plus rollback into the response contract.
 
 ---
 
