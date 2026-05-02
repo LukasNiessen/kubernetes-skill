@@ -1,6 +1,6 @@
 ---
 name: kubernetes-skill
-description: "Prevent Kubernetes hallucinations by diagnosing and fixing failure modes: insecure workload defaults, resource starvation, network exposure, privilege sprawl, fragile rollouts, and API drift. Use when generating, reviewing, refactoring, or migrating manifests, Helm charts, Kustomize overlays, and cluster policies."
+description: "Prevent Kubernetes hallucinations by diagnosing and fixing failure modes: insecure workload defaults, resource starvation, network exposure, privilege sprawl, fragile rollouts, and API drift. Use when generating, reviewing, refactoring, or migrating manifests, Helm charts, Kustomize overlays, cluster policies, and platform-specific Kubernetes work for EKS, GKE, AKS, OpenShift, GitOps controllers, or observability stacks."
 ---
 
 # KubeShark: Failure-Mode Workflow for Kubernetes
@@ -16,6 +16,7 @@ Record before writing manifests:
 - deployment method (raw YAML, Helm, Kustomize, operator-managed)
 - policy enforcement (Pod Security Admission level, Kyverno, OPA/Gatekeeper)
 - cloud provider and CNI (affects networking, storage classes, load balancers)
+- platform controllers/add-ons (GitOps, observability, ingress, service mesh, autoscaling)
 
 If unknown, state assumptions explicitly.
 
@@ -54,6 +55,16 @@ Supplemental references (only when needed):
 - `references/examples-good.md`
 - `references/examples-bad.md`
 - `references/do-dont-patterns.md`
+
+Conditional Reference Retrieval (CRR) references (load only when the signal is detected):
+- `references/eks-patterns.md` for EKS, AWS, IRSA, EKS Pod Identity, AWS Load Balancer Controller, EBS/EFS CSI, Karpenter
+- `references/gke-patterns.md` for GKE, Autopilot, Workload Identity Federation for GKE, Dataplane V2, GCE Ingress, Config Sync
+- `references/aks-patterns.md` for AKS, Microsoft Entra Workload ID, Azure CNI, AGIC, Azure Disk/File/Blob CSI
+- `references/openshift-patterns.md` for OpenShift, OKD, ROSA, ARO, Routes, SCCs, OLM, `oc`
+- `references/gitops-controllers.md` for Argo CD, ApplicationSet, Flux, GitOps reconciliation, sync waves
+- `references/observability-stacks.md` for Prometheus Operator, ServiceMonitor, PodMonitor, OpenTelemetry, Loki, Grafana
+
+Do not load multiple CRR files unless the task spans multiple detected platforms/tools.
 
 ## 4) Propose fix path with explicit risk controls
 

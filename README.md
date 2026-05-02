@@ -1,6 +1,7 @@
 # Kubernetes Skill for Claude Code and Codex: KubeShark
 
 <div align="center" name="top">
+  <img align="center" src="assets/logo.png" width="180" height="180" alt="KubeShark Logo">
 
 <!-- spacer -->
 <p></p>
@@ -113,12 +114,13 @@ Create a Helm chart for a PostgreSQL StatefulSet with backup CronJobs
 
 | Dimension                       | **KubeShark**                                          | **No Skill** |
 | ------------------------------- | ------------------------------------------------------ | ------------ |
-| **SKILL.md activation cost**    | ~650 tokens                                            | 0            |
-| **Reference granularity**       | 20 focused files                                       | --           |
-| **Token burn per query**        | Low (load 1-2 small refs)                              | 0            |
+| **SKILL.md activation cost**    | Low, procedural workflow only                          | 0            |
+| **Reference granularity**       | 26 focused files                                       | --           |
+| **Token burn per query**        | Low (load only matched refs)                           | 0            |
 | **Architecture**                | Failure-mode workflow                                  | --           |
 | **Diagnoses before generating** | Yes (Step 2)                                           | No           |
 | **Output contract**             | Yes -- assumptions, tradeoffs, rollback                | No           |
+| **Conditional references**      | EKS, GKE, AKS, OpenShift, GitOps, observability stacks | No           |
 | **Security-first defaults**     | PSS restricted profile                                 | No           |
 | **Good/bad examples**           | Yes (2 dedicated files)                                | No           |
 | **Do/Don't checklist**          | Yes (dedicated file)                                   | No           |
@@ -133,7 +135,7 @@ Create a Helm chart for a PostgreSQL StatefulSet with backup CronJobs
 
 The key insight is architectural. A static reference manual gives Claude information but never tells it _how to think_ about a problem. There's no diagnosis step, no risk assessment, and no structured output -- Claude reads the reference and generates whatever it thinks fits.
 
-KubeShark takes the opposite approach. The core SKILL.md is an 85-line operational workflow that costs ~650 tokens on activation. It forces Claude through a diagnostic sequence: capture context -> identify failure modes -> load _only_ the relevant references -> propose fixes with explicit risk controls -> validate -> deliver a structured output contract.
+KubeShark takes the opposite approach. The core SKILL.md is a compact operational workflow. It forces Claude through a diagnostic sequence: capture context -> identify failure modes -> load _only_ the relevant references -> propose fixes with explicit risk controls -> validate -> deliver a structured output contract.
 
 This matters for Kubernetes specifically because:
 
@@ -151,6 +153,22 @@ This matters for Kubernetes specifically because:
 - Keep references focused on failure-prone decisions
 - Exclude broad tutorial material with low safety impact
 - Add depth only when measured quality would otherwise drop
+- Use Conditional Reference Retrieval (CRR) for platform and controller specifics
+
+## Conditional Reference Retrieval (CRR)
+
+Conditional Reference Retrieval is context-gated reference loading. It is a skill-specific form of progressive disclosure: the workflow first captures signals from the request or repository, then loads only the reference files whose conditions match.
+
+This keeps common Kubernetes work lean. A plain Deployment review does not pay the token cost for EKS, GKE, AKS, OpenShift, GitOps, or observability-stack guidance. If the task mentions one of those platforms or controllers, KubeShark pulls in the matching reference and keeps the rest out of context.
+
+| Signal detected                           | CRR reference                                  | Purpose                                                     |
+| ----------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
+| EKS, AWS, IRSA, EKS Pod Identity, Karpenter | `references/eks-patterns.md`                 | AWS identity, load balancing, storage, CNI, node provisioning |
+| GKE, Autopilot, Workload Identity, Dataplane V2 | `references/gke-patterns.md`            | GKE identity, Autopilot constraints, networking, storage     |
+| AKS, Entra Workload ID, Azure CNI, AGIC   | `references/aks-patterns.md`                   | Azure identity, CNI, ingress, and CSI storage                |
+| OpenShift, OKD, ROSA, ARO, Routes, SCCs   | `references/openshift-patterns.md`             | SCCs, Routes, arbitrary UID images, OpenShift validation     |
+| Argo CD, Flux, ApplicationSet, GitOps     | `references/gitops-controllers.md`             | Reconciliation, pruning, ordering, drift, controller safety  |
+| Prometheus Operator, ServiceMonitor, OpenTelemetry, Loki, Grafana | `references/observability-stacks.md` | Monitoring CRDs, telemetry pipelines, log and alert hygiene  |
 
 ## What's Included
 
@@ -160,6 +178,7 @@ This matters for Kubernetes specifically because:
 - Workload pattern guides for Deployments, StatefulSets, Jobs, DaemonSets
 - Cross-cutting concern references: security hardening, observability, multi-tenancy, storage
 - Helm and Kustomize best practices
+- Conditional Reference Retrieval for EKS, GKE, AKS, OpenShift, GitOps controllers, and observability stacks
 - Validation and policy engine integration (Kyverno, OPA/Gatekeeper, kubeconform)
 - Good/bad example banks with LLM mistake checklists
 - Do/Don't pattern checklist
@@ -189,6 +208,12 @@ Here is an overview of the repository layout.
 | `references/helm-patterns.md`                    | Helm chart structure, templates, testing                       |
 | `references/kustomize-patterns.md`               | Kustomize overlays, patches, generators                        |
 | `references/validation-and-policy.md`            | kubeconform, Kyverno, OPA/Gatekeeper, CI integration           |
+| `references/eks-patterns.md`                     | EKS identity, load balancing, storage, CNI, Karpenter (CRR)    |
+| `references/gke-patterns.md`                     | GKE identity, Autopilot, Dataplane V2, storage (CRR)           |
+| `references/aks-patterns.md`                     | AKS workload identity, CNI, ingress, storage (CRR)             |
+| `references/openshift-patterns.md`               | OpenShift SCCs, Routes, arbitrary UID constraints (CRR)        |
+| `references/gitops-controllers.md`               | Argo CD, Flux, reconciliation, pruning, sync ordering (CRR)    |
+| `references/observability-stacks.md`             | Prometheus Operator, OpenTelemetry, Loki, Grafana (CRR)        |
 | `references/examples-good.md`                    | Production-ready annotated examples                            |
 | `references/examples-bad.md`                     | Anti-pattern examples with explanations                        |
 | `references/do-dont-patterns.md`                 | Do/Don't quick-reference checklist                             |
@@ -202,7 +227,7 @@ The skill runs as a failure-mode workflow whenever Claude Code handles Kubernete
 
 1. **Capture execution context** - Cluster version, distribution, namespace, environment, workload type, deployment method, policies
 2. **Diagnose likely failure mode(s)** - Insecure workload defaults, resource starvation, network exposure, privilege sprawl, fragile rollouts, API drift
-3. **Load only relevant references** - Pull targeted guidance for the failure mode(s) in scope
+3. **Load only relevant references** - Pull targeted guidance for the failure mode(s) in scope, then apply CRR for detected platforms/controllers
 4. **Propose fix path with controls** - Include risk notes, runtime behavior, tests, and rollback expectations
 5. **Generate implementation artifacts** - YAML manifests, Helm charts, Kustomize overlays, RBAC, policies
 6. **Validate before finalize** - Dry-run, schema validation, cross-resource consistency, policy scan
@@ -215,13 +240,15 @@ The skill runs as a failure-mode workflow whenever Claude Code handles Kubernete
 - RBAC, NetworkPolicy, and security hardening
 - Workload reliability: probes, resources, rollout strategies
 - Policy engine integration (Kyverno, OPA/Gatekeeper)
+- Platform-specific guidance for EKS, GKE, AKS, and OpenShift when detected
+- GitOps and observability-stack guidance when those controllers are in scope
 - CI validation pipelines for Kubernetes
 
 ## FAQ
 
 **Q: Does this work with all Kubernetes distributions?**
 
-Yes. KubeShark supports vanilla Kubernetes, EKS, GKE, AKS, k3s, and other distributions. The workflow captures cluster version and distribution first and adapts guidance accordingly.
+Yes. KubeShark supports vanilla Kubernetes, EKS, GKE, AKS, OpenShift, k3s, and other distributions. The workflow captures cluster version and distribution first and adapts guidance accordingly. CRR loads deeper platform references only when those distributions are detected.
 
 **Q: Will this slow down my AI interactions?**
 

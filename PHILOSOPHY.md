@@ -8,7 +8,7 @@ KubeShark is built around a single insight: telling an LLM *what good Kubernetes
 
 The core SKILL.md is not a reference manual. It is a 7-step operational workflow:
 
-1. **Capture execution context** -- cluster version, distribution, namespace, environment, workload type, deployment method, policy enforcement, cloud provider
+1. **Capture execution context** -- cluster version, distribution, namespace, environment, workload type, deployment method, policy enforcement, cloud provider, platform add-ons
 2. **Diagnose likely failure modes** -- insecure workload defaults, resource starvation, network exposure, privilege sprawl, fragile rollouts, API drift
 3. **Load only relevant references** -- pull targeted guidance, not everything
 4. **Propose fix path with risk controls** -- why this works, what could go wrong at runtime, guardrails
@@ -32,11 +32,23 @@ Terraform fails explicitly. A misconfiguration surfaces at `terraform plan` or `
 
 Context window space is a finite resource. Every token spent on skill content is a token unavailable for the user's actual manifests, conversation history, and tool results.
 
-KubeShark is designed for minimal activation cost. The core SKILL.md is ~85 lines (~650 tokens). It contains no YAML examples, no inline manifests, no tutorial material. It is purely procedural: a workflow the model follows.
+KubeShark is designed for minimal activation cost. The core SKILL.md is a compact procedural workflow. It contains no YAML examples, no inline manifests, no tutorial material. It tells the model how to route context before it writes manifests.
 
-Depth lives in 20 granular reference files. The model loads only the 1-2 files relevant to the diagnosed failure mode. A query about probe configuration never loads the RBAC guidance. A query about Helm chart structure never loads the NetworkPolicy patterns.
+Depth lives in 26 granular reference files. The model loads only the files relevant to the diagnosed failure mode and detected platform/tool signals. A query about probe configuration never loads the RBAC guidance. A query about Helm chart structure never loads the NetworkPolicy patterns. A vanilla Deployment review never loads EKS, GKE, AKS, OpenShift, GitOps, or observability-stack guidance unless those signals are present.
 
-This granularity matters. A single large reference file forces the model to process thousands of irrelevant tokens. 20 small files let it load precisely what it needs.
+This granularity matters. A single large reference file forces the model to process thousands of irrelevant tokens. Small, signal-gated files let it load precisely what it needs.
+
+## Conditional Reference Retrieval
+
+Conditional Reference Retrieval (CRR) is KubeShark's explicit name for signal-gated reference loading. It is a domain-specific form of progressive disclosure:
+
+1. Capture execution context and inspect repository signals.
+2. Diagnose the primary failure modes.
+3. Load the failure-mode references that match the risk.
+4. Load platform/tool references only when the detected signal warrants them.
+5. Keep unrelated provider, distribution, or controller guidance out of context.
+
+CRR is used for EKS, GKE, AKS, OpenShift, GitOps controllers, and observability stacks. These ecosystems are too important to ignore, but too specific to load for every Kubernetes task.
 
 ## Six Failure Modes
 
@@ -92,7 +104,7 @@ This makes outputs auditable. A reader can check whether the model's assumptions
 
 ## Reference Granularity
 
-The 20 reference files are organized by concern, not by Kubernetes concept:
+The 26 reference files are organized by concern, not by Kubernetes concept:
 
 **Primary failure modes** (loaded when the failure mode is diagnosed):
 - Insecure workload defaults, resource starvation, network exposure, privilege sprawl, fragile rollouts, API drift
@@ -105,6 +117,9 @@ The 20 reference files are organized by concern, not by Kubernetes concept:
 
 **Tooling and deployment** (loaded for tool-specific tasks):
 - Helm patterns, Kustomize patterns, validation and policy
+
+**Conditional platform/tool references** (loaded only when CRR detects a matching signal):
+- EKS patterns, GKE patterns, AKS patterns, OpenShift patterns, GitOps controllers, observability stacks
 
 **Pattern banks** (loaded for review or teaching):
 - Good examples, bad examples, do/don't patterns
@@ -132,7 +147,7 @@ Content enters KubeShark only when at least one condition is met:
 Content is excluded when:
 
 1. It is generic Kubernetes knowledge with low failure impact
-2. It is cloud-provider-specific deep configuration that belongs in project docs
+2. It is cloud-provider-specific deep configuration without a CRR signal gate
 3. It duplicates an existing rule without adding a new decision signal
 
 If repeated failure patterns emerge, targeted lines are added for that specific failure mode instead of broad expansion.
