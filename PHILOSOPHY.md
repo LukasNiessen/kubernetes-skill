@@ -50,6 +50,8 @@ Conditional Reference Retrieval (CRR) is KubeShark's explicit name for signal-ga
 
 CRR is used for EKS, GKE, AKS, OpenShift, GitOps controllers, and observability stacks. These ecosystems are too important to ignore, but too specific to load for every Kubernetes task.
 
+CRR references live under `references/conditional/`. The folder is named for the loading behavior so readers can understand the layout before they know the acronym.
+
 ## Six Failure Modes
 
 KubeShark names six failure modes explicitly. Six -- not five -- because Kubernetes has a broader failure surface than Terraform. The additional dimension (runtime behavior) demanded its own failure mode.
@@ -119,7 +121,7 @@ The 26 reference files are organized by concern, not by Kubernetes concept:
 - Helm patterns, Kustomize patterns, validation and policy
 
 **Conditional platform/tool references** (loaded only when CRR detects a matching signal):
-- EKS patterns, GKE patterns, AKS patterns, OpenShift patterns, GitOps controllers, observability stacks
+- `references/conditional/`: EKS patterns, GKE patterns, AKS patterns, OpenShift patterns, GitOps controllers, observability stacks
 
 **Pattern banks** (loaded for review or teaching):
 - Good examples, bad examples, do/don't patterns

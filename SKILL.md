@@ -57,12 +57,12 @@ Supplemental references (only when needed):
 - `references/do-dont-patterns.md`
 
 Conditional Reference Retrieval (CRR) references (load only when the signal is detected):
-- `references/eks-patterns.md` for EKS, AWS, IRSA, EKS Pod Identity, AWS Load Balancer Controller, EBS/EFS CSI, Karpenter
-- `references/gke-patterns.md` for GKE, Autopilot, Workload Identity Federation for GKE, Dataplane V2, GCE Ingress, Config Sync
-- `references/aks-patterns.md` for AKS, Microsoft Entra Workload ID, Azure CNI, AGIC, Azure Disk/File/Blob CSI
-- `references/openshift-patterns.md` for OpenShift, OKD, ROSA, ARO, Routes, SCCs, OLM, `oc`
-- `references/gitops-controllers.md` for Argo CD, ApplicationSet, Flux, GitOps reconciliation, sync waves
-- `references/observability-stacks.md` for Prometheus Operator, ServiceMonitor, PodMonitor, OpenTelemetry, Loki, Grafana
+- `references/conditional/eks-patterns.md` for EKS, AWS, IRSA, EKS Pod Identity, AWS Load Balancer Controller, EBS/EFS CSI, Karpenter
+- `references/conditional/gke-patterns.md` for GKE, Autopilot, Workload Identity Federation for GKE, Dataplane V2, GCE Ingress, Config Sync
+- `references/conditional/aks-patterns.md` for AKS, Microsoft Entra Workload ID, Azure CNI, AGIC, Azure Disk/File/Blob CSI
+- `references/conditional/openshift-patterns.md` for OpenShift, OKD, ROSA, ARO, Routes, SCCs, OLM, `oc`
+- `references/conditional/gitops-controllers.md` for Argo CD, ApplicationSet, Flux, GitOps reconciliation, sync waves
+- `references/conditional/observability-stacks.md` for Prometheus Operator, ServiceMonitor, PodMonitor, OpenTelemetry, Loki, Grafana
 
 Do not load multiple CRR files unless the task spans multiple detected platforms/tools.
 

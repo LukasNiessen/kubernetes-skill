@@ -184,14 +184,16 @@ Conditional Reference Retrieval is context-gated reference loading. It is a skil
 
 This keeps common Kubernetes work lean. A plain Deployment review does not pay the token cost for EKS, GKE, AKS, OpenShift, GitOps, or observability-stack guidance. If the task mentions one of those platforms or controllers, KubeShark pulls in the matching reference and keeps the rest out of context.
 
+CRR files live under `references/conditional/`. The directory name is intentionally plain-language; CRR is the mechanism, `conditional` is the repository convention.
+
 | Signal detected                           | CRR reference                                  | Purpose                                                     |
 | ----------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------- |
-| EKS, AWS, IRSA, EKS Pod Identity, Karpenter | `references/eks-patterns.md`                 | AWS identity, load balancing, storage, CNI, node provisioning |
-| GKE, Autopilot, Workload Identity, Dataplane V2 | `references/gke-patterns.md`            | GKE identity, Autopilot constraints, networking, storage     |
-| AKS, Entra Workload ID, Azure CNI, AGIC   | `references/aks-patterns.md`                   | Azure identity, CNI, ingress, and CSI storage                |
-| OpenShift, OKD, ROSA, ARO, Routes, SCCs   | `references/openshift-patterns.md`             | SCCs, Routes, arbitrary UID images, OpenShift validation     |
-| Argo CD, Flux, ApplicationSet, GitOps     | `references/gitops-controllers.md`             | Reconciliation, pruning, ordering, drift, controller safety  |
-| Prometheus Operator, ServiceMonitor, OpenTelemetry, Loki, Grafana | `references/observability-stacks.md` | Monitoring CRDs, telemetry pipelines, log and alert hygiene  |
+| EKS, AWS, IRSA, EKS Pod Identity, Karpenter | `references/conditional/eks-patterns.md`                 | AWS identity, load balancing, storage, CNI, node provisioning |
+| GKE, Autopilot, Workload Identity, Dataplane V2 | `references/conditional/gke-patterns.md`            | GKE identity, Autopilot constraints, networking, storage     |
+| AKS, Entra Workload ID, Azure CNI, AGIC   | `references/conditional/aks-patterns.md`                   | Azure identity, CNI, ingress, and CSI storage                |
+| OpenShift, OKD, ROSA, ARO, Routes, SCCs   | `references/conditional/openshift-patterns.md`             | SCCs, Routes, arbitrary UID images, OpenShift validation     |
+| Argo CD, Flux, ApplicationSet, GitOps     | `references/conditional/gitops-controllers.md`             | Reconciliation, pruning, ordering, drift, controller safety  |
+| Prometheus Operator, ServiceMonitor, OpenTelemetry, Loki, Grafana | `references/conditional/observability-stacks.md` | Monitoring CRDs, telemetry pipelines, log and alert hygiene  |
 
 ## What's Included
 
@@ -231,12 +233,12 @@ Here is an overview of the repository layout.
 | `references/helm-patterns.md`                    | Helm chart structure, templates, testing                       |
 | `references/kustomize-patterns.md`               | Kustomize overlays, patches, generators                        |
 | `references/validation-and-policy.md`            | kubeconform, Kyverno, OPA/Gatekeeper, CI integration           |
-| `references/eks-patterns.md`                     | EKS identity, load balancing, storage, CNI, Karpenter (CRR)    |
-| `references/gke-patterns.md`                     | GKE identity, Autopilot, Dataplane V2, storage (CRR)           |
-| `references/aks-patterns.md`                     | AKS workload identity, CNI, ingress, storage (CRR)             |
-| `references/openshift-patterns.md`               | OpenShift SCCs, Routes, arbitrary UID constraints (CRR)        |
-| `references/gitops-controllers.md`               | Argo CD, Flux, reconciliation, pruning, sync ordering (CRR)    |
-| `references/observability-stacks.md`             | Prometheus Operator, OpenTelemetry, Loki, Grafana (CRR)        |
+| `references/conditional/eks-patterns.md`         | EKS identity, load balancing, storage, CNI, Karpenter (CRR)    |
+| `references/conditional/gke-patterns.md`         | GKE identity, Autopilot, Dataplane V2, storage (CRR)           |
+| `references/conditional/aks-patterns.md`         | AKS workload identity, CNI, ingress, storage (CRR)             |
+| `references/conditional/openshift-patterns.md`   | OpenShift SCCs, Routes, arbitrary UID constraints (CRR)        |
+| `references/conditional/gitops-controllers.md`   | Argo CD, Flux, reconciliation, pruning, sync ordering (CRR)    |
+| `references/conditional/observability-stacks.md` | Prometheus Operator, OpenTelemetry, Loki, Grafana (CRR)        |
 | `references/examples-good.md`                    | Production-ready annotated examples                            |
 | `references/examples-bad.md`                     | Anti-pattern examples with explanations                        |
 | `references/do-dont-patterns.md`                 | Do/Don't quick-reference checklist                             |
