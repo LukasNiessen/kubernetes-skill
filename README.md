@@ -31,7 +31,7 @@ KubeShark is primarily based on the [official Kubernetes documentation](https://
 
 ---
 
-[Quick Start](#-quick-start) · [Why KubeShark](#-why-kubeshark) · [Token Strategy](#-token-strategy) · [What's Included](#-whats-included) · [How It Works](#-how-it-works) · [Philosophy](PHILOSOPHY.md)
+[Quick Start](#-quick-start) · [Why KubeShark](#-why-kubeshark) · [Token Strategy](#-token-strategy) · [What's Included](#-whats-included) · [How It Works](#-how-it-works) · [Sponsor](https://github.com/sponsors/LukasNiessen) · [Philosophy](PHILOSOPHY.md)
 
 ---
 
