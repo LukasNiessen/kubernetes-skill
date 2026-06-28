@@ -37,7 +37,15 @@ KubeShark is primarily based on the [official Kubernetes documentation](https://
 
 ## 2 min Quickstart
 
-### Option 1: Clone
+### Option 1: Skills CLI
+
+If you manage skills with the `skills` CLI, install KubeShark directly from GitHub:
+
+```bash
+npx skills add https://github.com/lukasniessen/kubernetes-skill --skill kubernetes-skill
+```
+
+### Option 2: Clone
 
 **macOS / Linux:**
 
@@ -59,7 +67,7 @@ git clone https://github.com/LukasNiessen/kubernetes-skill.git "%USERPROFILE%\.c
 
 That's it. Claude Code auto-discovers skills in `~/.claude/skills/` -- no restart needed.
 
-### Option 2: Marketplace
+### Option 3: Marketplace
 
 Claude Code has a built-in plugin system with marketplace support. Instead of cloning manually, you can add KubeShark's marketplace and install directly from the CLI:
 
@@ -70,7 +78,7 @@ Claude Code has a built-in plugin system with marketplace support. Instead of cl
 
 Or use the interactive plugin manager -- run `/plugin`, switch to the **Discover** tab, and install from there. The marketplace reads the `.claude-plugin/marketplace.json` in this repo to register KubeShark as an installable plugin.
 
-### Option 3: Codex
+### Option 4: Codex
 
 Codex has no global skill system -- setup is per-project. Clone KubeShark into your repo and reference it from your `AGENTS.md`:
 

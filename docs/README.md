@@ -20,6 +20,14 @@ KubeShark is a failure-mode-first Kubernetes skill for Claude Code and Codex. It
 
 ## Quick install
 
+Using the skills CLI:
+
+```bash
+npx skills add https://github.com/lukasniessen/kubernetes-skill --skill kubernetes-skill
+```
+
+Manual Claude Code install:
+
 ```bash
 git clone https://github.com/LukasNiessen/kubernetes-skill.git ~/.claude/skills/kubernetes-skill
 ```

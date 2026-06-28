@@ -1,10 +1,20 @@
 # Installation
 
-KubeShark can be installed in three ways depending on your environment: direct clone (recommended), marketplace install, or per-project setup for Codex.
+KubeShark can be installed in four ways depending on your environment: skills CLI, direct clone, marketplace install, or per-project setup for Codex.
 
 ---
 
-## Option 1: Direct Clone (Recommended)
+## Option 1: Skills CLI
+
+If you manage skills with the `skills` CLI, install KubeShark directly from GitHub:
+
+```bash
+npx skills add https://github.com/lukasniessen/kubernetes-skill --skill kubernetes-skill
+```
+
+---
+
+## Option 2: Direct Clone
 
 Clone the repository into your Claude Code skills directory. Claude Code auto-discovers skills in `~/.claude/skills/` -- no restart or configuration needed.
 
@@ -30,7 +40,7 @@ After cloning, the skill is active immediately. Claude Code reads `SKILL.md` on 
 
 ---
 
-## Option 2: Marketplace Install
+## Option 3: Marketplace Install
 
 Claude Code includes a built-in plugin system with marketplace support. This avoids manual cloning.
 
@@ -51,7 +61,7 @@ The marketplace reads `.claude-plugin/marketplace.json` in the repository to reg
 
 ---
 
-## Option 3: Codex Per-Project Setup
+## Option 4: Codex Per-Project Setup
 
 Codex has no global skill system. Setup is per-project: clone the skill into your repository and reference it from `AGENTS.md`.
 
