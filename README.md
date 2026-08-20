@@ -334,7 +334,7 @@ If KubeShark helps your project, please consider:
 
 ### Star History
 
-[![Star History Chart](https://star-history.dera.page/svg?repos=LukasNiessen/kubernetes-skill&type=Date)](https://star-history.dera.page/#LukasNiessen/kubernetes-skill&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=LukasNiessen/kubernetes-skill&type=date)](https://star-history.dera.page/#LukasNiessen/kubernetes-skill&type=date)
 
 ## License
 
